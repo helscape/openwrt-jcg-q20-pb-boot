@@ -1,0 +1,21 @@
+services:
+  openwrt-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile.openwrt
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+    image: openwrt-builder:latest
+    container_name: openwrt-builder
+    hostname: openwrt-builder
+    working_dir: /build
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./openwrt:/build
+      - ${HOME}/.ccache-openwrt:/home/builder/.ccache
+    environment:
+      - CCACHE_DIR=/home/builder/.ccache
+      - CCACHE_MAXSIZE=20G
+    command: /bin/bash
